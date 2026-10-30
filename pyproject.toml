@@ -1,0 +1,34 @@
+[project]
+name = "hoerfrau"
+version = "0.1.0"
+description = "Simulated Hörmann SupraMatic (BlueSecur BLE) garage door drive, for testing hoermoles-ble and its Home Assistant integration"
+readme = "README.md"
+authors = [
+    { name = "Denny Weinberg", email = "dweinberg@g6labs.co" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography>=50.0.2",
+    "hoermoles-ble[bleak]>=0.13.1",
+    "pyobjc-framework-corebluetooth>=13.0 ; sys_platform == 'darwin'",
+    "pyobjc-framework-libdispatch>=13.0 ; sys_platform == 'darwin'",
+    "qrcode>=8.2",
+]
+
+[project.scripts]
+hoerfrau = "hoerfrau:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1",
+]

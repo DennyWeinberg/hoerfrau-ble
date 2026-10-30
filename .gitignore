@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Simulator state (holds the drive's private key and root keys) and label exports
+.hoerfrau/
+*.svg
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
