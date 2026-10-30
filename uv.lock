@@ -247,7 +247,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cryptography", specifier = ">=50.0.2" },
+    { name = "cryptography", specifier = ">=42" },
     { name = "hoermoles-ble", extras = ["bleak"], specifier = ">=0.13.1" },
     { name = "pyobjc-framework-corebluetooth", marker = "sys_platform == 'darwin'", specifier = ">=13.0" },
     { name = "pyobjc-framework-libdispatch", marker = "sys_platform == 'darwin'", specifier = ">=13.0" },

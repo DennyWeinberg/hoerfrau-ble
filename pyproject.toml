@@ -8,7 +8,9 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "cryptography>=50.0.2",
+    # Same floor as hoermoles-ble; no higher, so it installs next to Home
+    # Assistant's pinned cryptography in the integration's test environment.
+    "cryptography>=42",
     "hoermoles-ble[bleak]>=0.13.1",
     "pyobjc-framework-corebluetooth>=13.0 ; sys_platform == 'darwin'",
     "pyobjc-framework-libdispatch>=13.0 ; sys_platform == 'darwin'",
