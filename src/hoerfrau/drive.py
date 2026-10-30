@@ -186,7 +186,10 @@ class SimulatedDrive:
     def qr_prefix(self) -> str:
         """31 digits: version 03, class and id as 2 hex digits, 3 unknown digits,
         20-digit serial, 2 trailing digits - the layout of the one real label
-        decoded so far ("0302020000030262602641451030700")."""
+        decoded so far ("0302020000030262602641451030700"). Hex digits A-F would
+        end the numeric prefix early (hoermoles_ble.protocol.parse_qr_code splits
+        at the first non-digit), so only ids whose hex form is all digits give a
+        usable label - true for every known product id (2, 17, 33, 49, 8, 40 ...)."""
         return f"03{self.state.product_class:02X}{self.state.product_id:02X}000{self.state.serial_no:020d}00"
 
     @property
