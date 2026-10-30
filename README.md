@@ -54,7 +54,7 @@ manufacturer data (company id 1972), which the integration's manifest matches an
 
 | What | Value |
 |---|---|
-| Local name | `HFSIM` + last 4 serial digits, e.g. `HFSIM1030` |
+| Local name | `HFSIM` (see below why it is so short) |
 | Manifest matcher | `{"local_name": "HFSIM*"}` (next to `{"manufacturer_id": 1972}`) |
 | Advertised service | `669a9001-0008-968f-e311-6050405558b3` (the real BlueConnect service) |
 | GATT | real BlueConnect TX `669a900c-…` (write) / RX `669a900a-…` (notify) |
@@ -71,15 +71,11 @@ Feeding both `packets` into `AdvertisementInfo.from_scan()` gives the same resul
 `config_flow.py` filters discovered devices on `MANUFACTURER_ID`, so the debug path has to
 accept the `HFSIM` name there as well.
 
-**Use `--name HFSIM` for Home Assistant** (observed 2026-10-30, macOS + HAOS with an Intel AX201):
-the advertisement is 31 bytes, and macOS fills 24 of them with flags (3), TX power (3) and the
-128-bit service UUID (18). The default name `HFSIM` + 4 digits needs 11 more, and macOS then
-drops it, also from the scan response, so HA only sees an unnamed device with the BlueConnect
-UUID. Bare `HFSIM` (7 bytes) fits exactly:
-
-```bash
-uv run hoerfrau run --name HFSIM
-```
+**Why the name is just `HFSIM`** (observed 2026-10-30, macOS + HAOS with an Intel AX201): the
+advertisement is 31 bytes, and macOS fills 24 of them with flags (3), TX power (3) and the 128-bit
+service UUID (18). A longer name such as `HFSIM` + 4 serial digits (11 bytes) was dropped by macOS,
+also from the scan response, so HA only saw an unnamed device with the BlueConnect UUID. Bare
+`HFSIM` (7 bytes) fits exactly. A custom `--name` longer than 5 characters has the same problem.
 
 On the Home Assistant side, also:
 

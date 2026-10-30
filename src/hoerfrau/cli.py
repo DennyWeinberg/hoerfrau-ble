@@ -36,8 +36,11 @@ def _load(args) -> SimulatedDrive:
 
 
 def local_name_for(drive: SimulatedDrive) -> str:
-    # Short enough to fit next to a 128-bit service UUID in one advertisement.
-    return f"HFSIM{drive.state.serial_no % 10000:04d}"
+    # Must fit into the 31-byte advertisement next to what macOS puts there:
+    # flags (3), TX power (3) and the 128-bit service UUID (18) leave 7 bytes,
+    # i.e. a 5-character name. A longer one is dropped altogether, also from the
+    # scan response, so Home Assistant would only see an unnamed device.
+    return "HFSIM"
 
 
 def print_label(drive: SimulatedDrive, svg: Path | None = None) -> None:
@@ -190,7 +193,7 @@ def main(argv: list[str] | None = None) -> None:
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="run the drive as a BLE peripheral (macOS)")
-    run.add_argument("--name", help="advertised local name (default HFSIM + last 4 serial digits)")
+    run.add_argument("--name", help="advertised local name (default HFSIM; longer than 5 characters isn't sent on macOS)")
     run.add_argument("--travel-time", type=float, default=15.0, help="seconds for a full open/close run")
     run.set_defaults(func=cmd_run)
 

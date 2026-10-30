@@ -8,8 +8,9 @@ macOS limits, and what they mean for testing:
 
 - CBPeripheralManager can only advertise a local name and service UUIDs, NOT
   manufacturer data. The real drive's 1972 manufacturer packets therefore never
-  go out over the air; the simulator advertises `HFSIM<serial tail>` plus the
-  BlueConnect service UUID instead, and serves the would-be manufacturer
+  go out over the air; the simulator advertises the name `HFSIM` plus the
+  BlueConnect service UUID instead (a longer name doesn't fit next to the UUID
+  and is dropped by macOS), and serves the would-be manufacturer
   packets from a debug characteristic (DEBUG_ADV, JSON) for anything that
   needs them.
 - A peripheral cannot disconnect a central. The real drive drops the link right
