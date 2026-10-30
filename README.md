@@ -71,13 +71,32 @@ Feeding both `packets` into `AdvertisementInfo.from_scan()` gives the same resul
 `config_flow.py` filters discovered devices on `MANUFACTURER_ID`, so the debug path has to
 accept the `HFSIM` name there as well.
 
+**Use `--name HFSIM` for Home Assistant** (observed 2026-10-30, macOS + HAOS with an Intel AX201):
+the advertisement is 31 bytes, and macOS fills 24 of them with flags (3), TX power (3) and the
+128-bit service UUID (18). The default name `HFSIM` + 4 digits needs 11 more, and macOS then
+drops it, also from the scan response, so HA only sees an unnamed device with the BlueConnect
+UUID. Bare `HFSIM` (7 bytes) fits exactly:
+
+```bash
+uv run hoerfrau run --name HFSIM
+```
+
+On the Home Assistant side, also:
+
+- Set the Bluetooth adapter to **active** scanning (Settings → Devices & services → Bluetooth →
+  *Configure*); in `auto` mode the name was not picked up.
+- BlueZ tries a Bluetooth Classic connection to the Mac (`br-connection-unknown`), because macOS
+  advertises from its public address with flags that say "BR/EDR capable". The integration sets
+  BlueZ's `PreferredBearer` to `le` for `HFSIM` devices before connecting.
+
 Differences from the real drive to keep in mind:
 
 - **No disconnect after a command.** The real drive drops the link ~100-150 ms after a command; a
   macOS peripheral can't disconnect a central. The challenge is spent anyway, so a second command on
   the same connection fails its signature check, as it would on the real drive after reconnecting.
 - **Address**: HA sees the Mac's BLE address, which macOS may rotate. Config entries are keyed by
-  address.
+  address. (Observed 2026-10-30: the Mac advertised from its public Bluetooth address, which
+  doesn't rotate.)
 - **Refused registration is silent**: outside teach mode the drive doesn't answer, and
   `HoermannClient.register()` then waits a hardcoded 20 s (its `timeout` argument doesn't cover
   that step).
