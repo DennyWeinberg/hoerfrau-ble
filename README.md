@@ -50,7 +50,10 @@ text into the client under test.
 
 macOS only lets a peripheral advertise a local name and service UUIDs, so the real drive's
 manufacturer data (company id 1972), which the integration's manifest matches and parses, is
-**not** on the air. To make HA see the simulator, a debug matcher is needed in the integration:
+**not** on the air. To make HA see the simulator, the integration needs a debug path for it.
+That exists in [hoermoles-ble-homeassistant#4](https://github.com/the78mole/hoermoles-ble-homeassistant/pull/4)
+(pending): discovery by name, QR-label registration, cover and buttons, and the sensors, which
+it reads from the debug characteristic below every 30 s (5 s while the door moves).
 
 | What | Value |
 |---|---|
